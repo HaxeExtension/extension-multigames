@@ -100,17 +100,17 @@ haxelib install extension-multigames
 
 ###How to Choose the Ad Network
 
-To build using Google Play Games (the default on every platform except for Amazon and iOS)
+To build using **Google Play Games** (the default on every platform except for Amazon and iOS)
 ```bash
 lime build android
 ```
 
-To build using Game Center
+To build using **Game Center**
 ```
 lime build ios
 ```
 
-To build using Amazon Game Circle
+To build using **Amazon Game Circle**
 ```bash
 lime build android -Damazon
 ```
