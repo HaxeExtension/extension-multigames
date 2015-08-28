@@ -1,0 +1,10 @@
+{
+        "name": "extension-multigames",
+        "url": "https://github.com/sempaigames/extension-multigames",
+        "license": "MIT",
+        "contributors":["fbricker"],
+        "tags": ["gaming","extension","lime","openfl","android","ios","amazon","game center","game circle","google play games"],
+        "description": "OpenFL / Lime extension to manage multiple gaming networks using a single API.",
+        "version": "1.0.0",
+        "releasenote": "First commit."
+}

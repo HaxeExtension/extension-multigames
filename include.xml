@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension>
+	<set name="gpgrest" if="blackberry || tizen" />
+	<set name="gpgnative" if="android" unless="amazon" />
+	<haxedef name="gpgrest" if="blackberry" />
+	<haxedef name="gpgnative" if="android" unless="amazon" />
+
+	<haxelib name="openfl-gpg" if="gpgnative" />
+	<haxelib name="extension-gamecircle" if="amazon" />
+	<haxelib name="extension-gpgrest" if="gpgrest" />
+	<haxelib name="gamecenter" if="ios" />
+</extension>
