@@ -5,6 +5,6 @@
         "contributors":["fbricker"],
         "tags": ["gaming","extension","lime","openfl","android","ios","amazon","game center","game circle","google play games"],
         "description": "OpenFL / Lime extension to manage multiple gaming networks using a single API.",
-        "version": "1.0.0",
-        "releasenote": "First commit."
+        "version": "1.1.0",
+        "releasenote": "Add unlock and displayAllLeaderboards method."
 }

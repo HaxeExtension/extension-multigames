@@ -62,9 +62,32 @@ class Multigames {
 		#end
 	}
 
+	public static function unlock(achievementName:String):Bool{
+		#if (gpgnative || gpgrest)
+			return GooglePlayGames.unlock(GooglePlayGames.getID(achievementName));
+		#elseif ios
+			GameCenter.reportAchievement(achievementName, 100);
+			return true;
+		#elseif amazon
+			return GameCircle.setSteps(achievementName, 100);			
+		#else
+			return false;
+		#end
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	//// UI 
 	///////////////////////////////////////////////////////////////////////////
+
+	public static function displayAllLeaderboards(defaultLeaderboard:String){
+		#if (gpgnative || gpgrest)
+			GooglePlayGames.displayAllScoreboards();
+		#elseif ios
+			GameCenter.showLeaderboard(defaultLeaderboard);
+		#elseif amazon
+			GameCircle.displayAllScoreboards(); 
+		#end
+	}
 
 	public static function displayLeaderboard(leaderboardName:String){
 		#if (gpgnative || gpgrest)
