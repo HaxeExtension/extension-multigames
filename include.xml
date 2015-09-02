@@ -2,8 +2,8 @@
 <extension>
 	<set name="gpgrest" if="blackberry || tizen" />
 	<set name="gpgnative" if="android" unless="amazon" />
-	<haxedef name="gpgrest" if="blackberry" />
-	<haxedef name="gpgnative" if="android" unless="amazon" />
+	<haxedef name="gpgrest" if="gpgrest" />
+	<haxedef name="gpgnative" if="gpgnative" />
 
 	<haxelib name="openfl-gpg" if="gpgnative" />
 	<haxelib name="extension-gamecircle" if="amazon" />
