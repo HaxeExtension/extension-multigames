@@ -8,5 +8,5 @@
 	<haxelib name="openfl-gpg" if="gpgnative" />
 	<haxelib name="extension-gamecircle" if="amazon" />
 	<haxelib name="extension-gpgrest" if="gpgrest" />
-	<haxelib name="gamecenter" if="ios" />
+	<haxelib name="extension-gamecenter" if="ios" />
 </extension>
