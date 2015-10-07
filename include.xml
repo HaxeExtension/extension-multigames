@@ -5,7 +5,7 @@
 	<haxedef name="gpgrest" if="gpgrest" />
 	<haxedef name="gpgnative" if="gpgnative" />
 
-	<haxelib name="openfl-gpg" if="gpgnative" />
+	<haxelib name="extension-googleplaygames" if="gpgnative" />
 	<haxelib name="extension-gamecircle" if="amazon" />
 	<haxelib name="extension-gpgrest" if="gpgrest" />
 	<haxelib name="extension-gamecenter" if="ios" />
