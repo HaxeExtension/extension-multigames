@@ -11,6 +11,6 @@
             "extension-gpgrest": "",
             "extension-gamecenter": ""
         },
-        "version": "1.1.4",
-        "releasenote": "Change extension 'openfl-gpg' for extension 'extension-googleplaygames'."
+        "version": "1.1.5",
+        "releasenote": "Remove deprecated AppState API from GooglePlayGames (cloudGet/cloudSet)."
 }

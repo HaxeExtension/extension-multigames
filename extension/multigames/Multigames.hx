@@ -113,13 +113,6 @@ class Multigames {
 	//// CLOUD 
 	///////////////////////////////////////////////////////////////////////////
 
-	// DEPRECATED!
-	#if gpgnative
-	public static function legacyCloudGet(id:Int){
-		GooglePlayGames.cloudGet(id);
-	}
-	#end
-
 	public static function loadSavedGame(name:String){
 		#if gpgnative
 			GooglePlayGames.loadSavedGame(name);
@@ -167,17 +160,6 @@ class Multigames {
 			GameCircle.onCloudGetConflict=onLoadGameConflict;
 		#end
 	}
-
-	// DEPRECATED!
-	#if gpgnative
-	public static function setOnCloudGetCompleteCallback(onCloudGetComplete:Int->String->Void){
-		GooglePlayGames.onCloudGetComplete=onCloudGetComplete;
-	}
-	public static function setOnCloudGetConflictCallback(onCloudGetConflict:Int->String->String->Void){
-		GooglePlayGames.onCloudGetConflict=onCloudGetConflict;
-	}
-	#end
-
 
 	///////////////////////////////////////////////////////////////////////////
 	//// INIT 
