@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension>
 	<set name="gpgrest" if="blackberry || tizen" />
-	<set name="gpgnative" if="android" unless="amazon" />
+	<set name="gpgnative" if="android" unless="amazon || gpgrest" />
 	<haxedef name="gpgrest" if="gpgrest" />
 	<haxedef name="gpgnative" if="gpgnative" />
 

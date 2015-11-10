@@ -1,7 +1,11 @@
 package extension.multigames;
 
-#if (gpgnative || gpgrest)
+#if gpgnative
 import extension.gpg.GooglePlayGames;
+#end
+
+#if gpgrest
+import com.sempaigames.gplayrest.GooglePlayGames;
 #end
 
 #if ios
