@@ -104,6 +104,10 @@ To build using **Google Play Games** (the default on every platform except for A
 ```bash
 lime build android
 ```
+Please note that for the native version of GooglePlayGames (android) you'll also need to add your google play games ID in your project.xml:
+```xml
+<setenv name="GOOGLE_PLAY_GAMES_ID" value="32180581421" /> <!-- REPLACE THIS WITH YOUR GOOGLE PLAY GAMES ID! -->
+```
 
 To build using **Game Center**
 ```
