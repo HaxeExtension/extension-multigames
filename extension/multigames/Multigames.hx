@@ -6,6 +6,7 @@ import extension.gpg.GooglePlayGames;
 
 #if ios
 import extension.gamecenter.GameCenter;
+import extension.gamecenter.GameCenterEvent;
 #end
 
 #if amazon
@@ -32,18 +33,66 @@ class Multigames {
 		#end
 	}
 
+	public static function getPlayerScore(leaderboardName:String):Bool {
+		#if (gpgnative || gpgrest)
+			return (GooglePlayGames.getPlayerScore(GooglePlayGames.getID(leaderboardName)));
+		#elseif amazon
+			return (GameCircle.getPlayerScore(leaderboardName));
+		#elseif ios
+			GameCenter.getPlayerScore(leaderboardName);
+			return true;
+		#else
+			return false;
+		#end
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	//// ACHIEVEMENTS 
 	///////////////////////////////////////////////////////////////////////////
 
-	public static function setProgress(achievementName:String, count:Int, totalSteps:Int):Bool{
+	// public static function setProgress(achievementName:String, count:Int, totalSteps:Int):Bool{
+	// 	#if (gpgnative || gpgrest)
+	// 		return GooglePlayGames.setSteps(GooglePlayGames.getID(achievementName),count);
+	// 	#elseif ios
+	// 		GameCenter.reportAchievement(achievementName, (100.0 * count)/totalSteps);
+	// 		return true;
+	// 	#elseif amazon
+	// 		return GameCircle.setSteps(achievementName, (100.0 * count)/totalSteps);			
+	// 	#else
+	// 		return false;
+	// 	#end
+	// }
+
+		private static var totalStepsHash:Map<String, Int> = new Map<String, Int>();
+		private static var currentStepsHash:Map<String, Int> = new Map<String, Int>();
+
+		public static function setAchievementTotalSteps(achievementName:String, totalSteps:Int):Void {
+			totalStepsHash.set(achievementName, totalSteps);
+			currentStepsHash.set(achievementName, 0);
+		}
+
+	public static function setProgress(achievementName:String, steps:Int):Bool {
 		#if (gpgnative || gpgrest)
-			return GooglePlayGames.setSteps(GooglePlayGames.getID(achievementName),count);
-		#elseif ios
-			GameCenter.reportAchievement(achievementName, (100.0 * count)/totalSteps);
-			return true;
+			return (GooglePlayGames.setSteps(GooglePlayGames.getID(achievementName), steps));
 		#elseif amazon
-			return GameCircle.setSteps(achievementName, (100.0 * count)/totalSteps);			
+			if (currentStepsHash.get(achievementName) < steps) currentStepsHash.set(achievementName, steps);
+			return (GameCircle.setSteps(achievementName, (100.0 * steps) / totalStepsHash.get(achievementName)));
+		#elseif ios
+			if (currentStepsHash.get(achievementName) < steps) currentStepsHash.set(achievementName, steps);
+			GameCenter.reportAchievement(achievementName, (100.0 * steps) / totalStepsHash.get(achievementName));
+			return true;
+		#else
+			return false;
+		#end
+	}
+
+	public static function increment(achievementName:String, steps:Int):Bool {
+		#if (gpgnative || gpgrest)
+			return (GooglePlayGames.increment(GooglePlayGames.getID(achievementName), steps));
+		#elseif (amazon || ios)
+			var newCantSteps = steps + currentStepsHash.get(achievementName);
+			setProgress(achievementName, newCantSteps);
+			return true;
 		#else
 			return false;
 		#end
@@ -70,6 +119,32 @@ class Multigames {
 			return true;
 		#elseif amazon
 			return GameCircle.setSteps(achievementName, 100);			
+		#else
+			return false;
+		#end
+	}
+
+	public static function getAchievementStatus(achievementName:String):Bool {
+		#if (gpgnative || gpgrest)
+			return (GooglePlayGames.getAchievementStatus(GooglePlayGames.getID(achievementName)));
+		#elseif amazon
+			return (GameCircle.getAchievementStatus(achievementName));
+		#elseif ios
+			GameCenter.getAchievementStatus(achievementName);
+			return true;
+		#else
+			return false;
+		#end
+	}
+
+	public static function getCurrentAchievementSteps(achievementName:String):Bool {
+		#if (gpgnative || gpgrest)
+			return (GooglePlayGames.getCurrentAchievementSteps(GooglePlayGames.getID(achievementName)));
+		#elseif amazon
+			return (GameCircle.getCurrentAchievementSteps(achievementName));
+		#elseif ios
+			GameCenter.getCurrentAchievementSteps(achievementName);
+			return true;
 		#else
 			return false;
 		#end
@@ -158,6 +233,56 @@ class Multigames {
 			GooglePlayGames.onLoadGameConflict=onLoadGameConflict;
 		#elseif amazon
 			GameCircle.onCloudGetConflict=onLoadGameConflict;
+		#end
+	}
+
+	// ------------ Callback getAchievementStatus ------------
+	public static function setOnGetPlayerAchievementStatus(onGetPlayerAchievementStatus:String->Int->Void) {
+		#if (gpgnative || gpgrest)
+			GooglePlayGames.onGetPlayerAchievementStatus = onGetPlayerAchievementStatus;
+		#elseif amazon
+			GameCircle.onGetPlayerAchievementStatus = onGetPlayerAchievementStatus;
+		#elseif ios
+			var onGetAchStatus:Dynamic -> Void = function(e:Dynamic) {
+				if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(e.data1, Std.parseInt(e.data2));
+			}
+			GameCenter.addEventListener(GameCenterEvent.ON_GET_ACHIEVEMENT_STATUS_SUCESS, onGetAchStatus);
+		#end
+	}
+
+	// ------------ Callback getCurrentAchievementSteps ------------	
+	public static function setOnGetPlayerCurrentSteps(onGetPlayerCurrentSteps:String->Int->Void) {
+		#if amazon
+			var onGetPlayerCurrentStepsFloat:String -> Float -> Void = function(achievementName:String, percent:Float){
+				var currentSteps = Math.round((percent * totalStepsHash.get(achievementName)) / 100);
+				onGetPlayerCurrentSteps(achievementName, currentSteps);
+			}
+			GameCircle.onGetPlayerCurrentSteps = onGetPlayerCurrentStepsFloat;
+		#elseif (gpgnative || gpgrest)
+			GooglePlayGames.onGetPlayerCurrentSteps = onGetPlayerCurrentSteps;
+		#elseif ios
+			var onGetAchSteps:Dynamic -> Void = function(e:Dynamic) {
+				if (onGetPlayerCurrentSteps != null) {
+					var currentPercent = Std.parseFloat(e.data2);
+					var currentSteps = Math.round((currentPercent * totalStepsHash.get(e.data1)) / 100);
+					onGetPlayerCurrentSteps(e.data1, currentSteps);
+				}
+			}
+			GameCenter.addEventListener(GameCenterEvent.ON_GET_ACHIEVEMENT_STEPS_SUCESS, onGetAchSteps);
+		#end
+	}
+
+	// ------------ Callback getPlayerScore ------------
+	public static function setOnGetPlayerScore(onGetPlayerScore:String->Int->Void) {
+		#if (gpgnative || gpgrest)
+			GooglePlayGames.onGetPlayerScore = onGetPlayerScore;
+		#elseif amazon
+			GameCircle.onGetPlayerScore = onGetPlayerScore;
+		#elseif ios
+			var onGetScore:Dynamic -> Void = function(e:Dynamic) {
+				if (onGetPlayerScore != null) onGetPlayerScore(e.data1, Std.parseInt(e.data2));
+			}
+			GameCenter.addEventListener(GameCenterEvent.ON_GET_PLAYER_SCORE_SUCESS, onGetScore);
 		#end
 	}
 
