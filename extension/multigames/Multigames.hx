@@ -128,9 +128,9 @@ class Multigames {
 		#if (gpgnative || gpgrest)
 			return (GooglePlayGames.getCurrentAchievementSteps(GooglePlayGames.getID(achievementName)));
 		#elseif amazon
-			return (GameCircle.getAchievementCurrentProgress(achievementName));
+			return (GameCircle.getAchievementProgress(achievementName));
 		#elseif ios
-			GameCenter.getAchievementCurrentProgress(achievementName);
+			GameCenter.getAchievementProgress(achievementName);
 			return true;
 		#else
 			return false;
