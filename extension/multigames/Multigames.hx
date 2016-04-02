@@ -1,4 +1,5 @@
 package extension.multigames;
+import flash.net.SharedObject;
 
 #if (gpgnative || gpgrest)
 import extension.gpg.GooglePlayGames;
@@ -15,6 +16,9 @@ import extension.gc.GameCircle;
 
 class Multigames {
 
+	private static var sharedMaxScoreToSend:SharedObject = null;
+	private static var maxScoresToSend:Map<String,Int>=new Map<String,Int>();
+
 	#if amazon
 	private static var lastOpenedGame:String=null;
 	#end
@@ -24,12 +28,13 @@ class Multigames {
 	///////////////////////////////////////////////////////////////////////////
 
 	public static function setScore(leaderboardName:String,score:Int) {
+		updateMaxScore(leaderboardName,score);
 		#if (gpgnative || gpgrest)
-			GooglePlayGames.setScore(GooglePlayGames.getID(leaderboardName),score);
+			GooglePlayGames.setScore(GooglePlayGames.getID(leaderboardName),maxScoresToSend.get(leaderboardName).get());
 		#elseif ios
-			GameCenter.reportScore(leaderboardName, score);
+			GameCenter.reportScore(leaderboardName, maxScoresToSend.get(leaderboardName).get());
 		#elseif amazon
-			GameCircle.setScore(leaderboardName, score); 		
+			GameCircle.setScore(leaderboardName, maxScoresToSend.get(leaderboardName).get()); 		
 		#end
 	}
 
@@ -308,6 +313,51 @@ class Multigames {
 		#if (gpgnative || gpgrest)
 		GooglePlayGames.loadResourcesFromXML(xml);
 		#end
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	//// PERSITENCE LOGIC
+	///////////////////////////////////////////////////////////////////////////
+
+	private static function initSharedMaxScoreToSend() {
+		if (sharedMaxScoreToSend==null) {
+			sharedMaxScoreToSend = SharedObject.getLocal('extensionMultigameDataPersistence');
+
+			if (sharedMaxScoreToSend != null && sharedMaxScoreToSend.data != null && sharedMaxScoreToSend.data.dataValue != null) {
+				loadScorePersistence();
+			}
+		}
+	}
+	
+	private static function updateMaxScore(leaderboardName:String,score:Int) {
+		var scoreSaved:Int=maxScoresToSend.get(leaderboardName);
+		if (scoreSaved==null) scoreSaved=0;
+		maxScoresToSend.set(leaderboardName, Std.int(Math.max(scoreSaved,score)));
+		saveScorePersistence();
+	}
+
+	public static function loadScorePersistence() {
+		var datos:String = sharedMaxScoreToSend.data.dataValue;			
+
+		for (elem in datos.split("|")) {
+			if (elem != "") {
+				var aux = elem.split("·");
+				maxScoresToSend.set(aux[0], Std.parseInt(aux[1]));
+			}
+		}
+	}
+	
+	private static function saveScorePersistence() {
+		initSharedMaxScoreToSend();
+		var value = "";
+		for (key in maxScoresToSend.keys()) value += key + "·" + maxScoresToSend.get(key) + "|";
+		
+		sharedMaxScoreToSend.data.dataValue = value;
+		try {
+			sharedMaxScoreToSend.flush();
+		} catch (e:Dynamic) {
+			trace ("EXTENSION-MULTIGAME: Error al persistir el puntaje");
+		}
 	}
 
 }
