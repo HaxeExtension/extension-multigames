@@ -30,11 +30,20 @@ class Multigames {
 	public static function setScore(leaderboardName:String,score:Int) {
 		updateMaxScore(leaderboardName,score);
 		#if (gpgnative || gpgrest)
-			GooglePlayGames.setScore(GooglePlayGames.getID(leaderboardName),maxScoresToSend.get(leaderboardName).get());
+			if (GooglePlayGames.setScore(GooglePlayGames.getID(leaderboardName),maxScoresToSend.get(leaderboardName))) {
+				maxScoresToSend.set(leaderboardName, 0);
+				saveScorePersistence();
+			}
 		#elseif ios
-			GameCenter.reportScore(leaderboardName, maxScoresToSend.get(leaderboardName).get());
+			GameCenter.reportScore(leaderboardName, maxScoresToSend.get(leaderboardName));
+			maxScoresToSend.set(leaderboardName, 0);
 		#elseif amazon
-			GameCircle.setScore(leaderboardName, maxScoresToSend.get(leaderboardName).get()); 		
+			if (GameCircle.setScore(leaderboardName, maxScoresToSend.get(leaderboardName))) {
+				maxScoresToSend.set(leaderboardName, 0);
+				saveScorePersistence();
+			} 		
+		#else
+			maxScoresToSend.set(leaderboardName, 0);
 		#end
 	}
 
@@ -330,8 +339,7 @@ class Multigames {
 	}
 	
 	private static function updateMaxScore(leaderboardName:String,score:Int) {
-		var scoreSaved:Int=maxScoresToSend.get(leaderboardName);
-		if (scoreSaved==null) scoreSaved=0;
+		var scoreSaved=((maxScoresToSend.exists(leaderboardName))?maxScoresToSend.get(leaderboardName):0);
 		maxScoresToSend.set(leaderboardName, Std.int(Math.max(scoreSaved,score)));
 		saveScorePersistence();
 	}
@@ -341,8 +349,8 @@ class Multigames {
 
 		for (elem in datos.split("|")) {
 			if (elem != "") {
-				var aux = elem.split("·");
-				maxScoresToSend.set(aux[0], Std.parseInt(aux[1]));
+				var aux = elem.split("·"), scoreSaved=((maxScoresToSend.exists(aux[0]))?maxScoresToSend.get(aux[0]):0);
+				maxScoresToSend.set(aux[0], Std.int(Math.max(scoreSaved, Std.parseInt(aux[1]))));
 			}
 		}
 	}
