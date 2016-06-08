@@ -11,6 +11,6 @@
             "extension-gpgrest": "",
             "extension-gamecenter": ""
         },
-        "version": "1.1.5",
-        "releasenote": "Remove deprecated AppState API from GooglePlayGames (cloudGet/cloudSet)."
+        "version": "1.2.0",
+        "releasenote": "Add Increment Method to the API + Make a better scores management"
 }

@@ -42,6 +42,20 @@ class SimpleExample {
 		// Then, in case you want to use clud storage ("google play saved games" or "amazon whispersync for games")
 		Multigames.setOnLoadGameCompleteCallback(onLoadGameComplete);
 		Multigames.setOnLoadGameConflictCallback(onLoadGameConflict);										
+
+		// Set the achievements steps (you need to decice how many steps you want achievements to have)
+		Multigames.setAchievementSteps("achievement_complete_stage_1",20);
+		Multigames.setAchievementSteps("achievement_complete_stage_2",20);
+		Multigames.setAchievementSteps("achievement_complete_stage_3",20);
+		Multigames.setAchievementSteps("achievement_complete_stage_4",20);
+		Multigames.setAchievementSteps("achievement_complete_stage_5",20);
+		Multigames.setAchievementSteps("achievement_complete_stage_6",20);
+		Multigames.setAchievementSteps("achievement_unlock_stage_2",15);
+		Multigames.setAchievementSteps("achievement_unlock_stage_3",15);
+		Multigames.setAchievementSteps("achievement_unlock_stage_4",15);
+		Multigames.setAchievementSteps("achievement_unlock_stage_5",15);
+		Multigames.setAchievementSteps("achievement_unlock_stage_6",15);
+
 	}
 
 	function gameOver() {
@@ -98,9 +112,15 @@ class SimpleExample {
 haxelib install extension-multigames
 ```
 
-###How to Choose the Ad Network
+then on your project.xml add
 
-To build using **Google Play Games** (the default on every platform except for Amazon and iOS)
+```xml
+    <haxelib name="extension-multigames" />
+```
+
+###How to use / build for each platform
+
+To build using **Google Play Games** on Android
 ```bash
 lime build android
 ```
@@ -109,10 +129,12 @@ Please note that for the native version of GooglePlayGames (android) you'll also
 <setenv name="GOOGLE_PLAY_GAMES_ID" value="32180581421" /> <!-- REPLACE THIS WITH YOUR GOOGLE PLAY GAMES ID! -->
 ```
 
+
 To build using **Game Center**
-```
+```bash
 lime build ios
 ```
+
 
 To build using **Amazon Game Circle**
 ```bash
@@ -120,8 +142,20 @@ lime build android -Damazon
 ```
 Please note that you'll need to add the gamecircle_api_key.txt file in your assets folder like this:
 ```xml
-	<assets path="Assets/gamecircle_api_key.txt" rename="api_key.txt" if="amazon"/>
+<assets path="Assets/gamecircle_api_key.txt" rename="api_key.txt" if="amazon"/>
 ```
+
+
+To build using **Google Play Games / REST API** (the default on every other platform)
+
+```bash
+lime build blackberry
+lime build tizen
+lime build windows
+lime build mac
+lime build linux 
+```
+
 
 ###License
 
