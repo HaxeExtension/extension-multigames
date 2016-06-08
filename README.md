@@ -115,7 +115,7 @@ haxelib install extension-multigames
 then on your project.xml add
 
 ```xml
-    <haxelib name="extension-multigames" />
+<haxelib name="extension-multigames" />
 ```
 
 ###How to use / build for each platform
