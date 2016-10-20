@@ -258,7 +258,7 @@ class Multigames {
 			var onGetAchStatus:Dynamic -> Void = function(e:Dynamic) {
 				if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(e.data1, Std.parseInt(e.data2));
 			}
-			GameCenter.addEventListener(GameCenterEvent.ON_GET_ACHIEVEMENT_STATUS_SUCESS, onGetAchStatus);
+			GameCenter.addEventListener(GameCenterEvent.ON_GET_ACHIEVEMENT_STATUS_SUCCESS, onGetAchStatus);
 		#end
 	}
 	
@@ -279,7 +279,7 @@ class Multigames {
 					onGetPlayerCurrentSteps(e.data1, currentSteps);
 				}
 			}
-			GameCenter.addEventListener(GameCenterEvent.ON_GET_ACHIEVEMENT_PROGRESS_SUCESS, onGetAchSteps);
+			GameCenter.addEventListener(GameCenterEvent.ON_GET_ACHIEVEMENT_PROGRESS_SUCCESS, onGetAchSteps);
 		#end
 	}
 
@@ -292,7 +292,7 @@ class Multigames {
 			var onGetScore:Dynamic -> Void = function(e:Dynamic) {
 				if (onGetPlayerScore != null) onGetPlayerScore(e.data1, Std.parseInt(e.data2));
 			}
-			GameCenter.addEventListener(GameCenterEvent.ON_GET_PLAYER_SCORE_SUCESS, onGetScore);
+			GameCenter.addEventListener(GameCenterEvent.ON_GET_PLAYER_SCORE_SUCCESS, onGetScore);
 		#end
 	}
 
