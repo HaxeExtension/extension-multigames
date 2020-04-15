@@ -1,15 +1,15 @@
-#extension-multigames
+# extension-multigames
 
 A minimalistic OpenFL / Lime extension to manage multiple gaming networks using a single API.
 
-###Currently supports
+### Currently supports
 
 * Google Play Games (Android)
 * Google Play Games (All platforms / haXe API)
 * Amazon Game Circle (Android)
 * Game Center (iOS)
 
-###Simple use Example
+### Simple use Example
 
 ```haxe
 // This example show a simple ussage example.
@@ -106,7 +106,7 @@ class SimpleExample {
 
 ```
 
-###How to Install
+### How to Install
 
 ```bash
 haxelib install extension-multigames
@@ -118,7 +118,7 @@ then on your project.xml add
 <haxelib name="extension-multigames" />
 ```
 
-###How to use / build for each platform
+### How to use / build for each platform
 
 To build using **Google Play Games** on Android
 ```bash
@@ -157,7 +157,7 @@ lime build linux
 ```
 
 
-###License
+### License
 
 The MIT License (MIT) - [LICENSE.md](LICENSE.md)
 
